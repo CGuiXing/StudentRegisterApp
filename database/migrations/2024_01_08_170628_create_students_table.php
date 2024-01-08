@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('name'); 
             $table->string('email')->unique(); 
             $table->text('address'); 
-            $table->string('study');
-            $table->string('course');
+            $table->string('study_course');
             $table->timestamps();
         });
     }

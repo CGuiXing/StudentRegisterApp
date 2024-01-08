@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StudentsResource;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
@@ -37,7 +38,7 @@ class StudentsController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return new StudentsResource($student);
     }
 
     /**

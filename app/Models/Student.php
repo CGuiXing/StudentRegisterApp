@@ -13,7 +13,6 @@ class Student extends Model
         'name', 
         'email', 
         'address', 
-        'study', 
-        'course',
+        'study_course', 
     ];
 }

@@ -16,8 +16,13 @@ class StudentFactory extends Factory
      */
     public function definition(): array
     {
+        $course = ['Computer Science', 'Data Science', 'Web Development', 'Machine Learning', 'Software Engineering'];
+
         return [
-            //
+            'name' => $this->faker->name, 
+            'email' => $this->faker->unique()->email, 
+            'address' => $this->faker->address, 
+            'study_course' => $this->faker->randomElement($course),
         ];
     }
 }
