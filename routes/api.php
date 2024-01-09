@@ -23,4 +23,5 @@ Route::middleware('auth:api')->prefix('students')->group(function(){
     Route::get('/', [StudentsController::class, 'index']);
     Route::get('/name/{name}', [StudentsController::class, 'search_name']);
     Route::get('/email/{email}', [StudentsController::class, 'search_email']);
+    Route::post('/import_students', [StudentsController::class, 'importStudents']);
 });

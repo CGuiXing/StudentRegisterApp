@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\StudentsResource;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use App\Imports\StudentsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentsController extends Controller
 {
@@ -102,5 +104,22 @@ class StudentsController extends Controller
             return StudentsResource::collection($student);
         }
         
+    }
+
+    public function importStudents(Request $request)
+    {
+        // Validate the request, ensuring that a file is present
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx',
+        ]);
+
+        // Get the file from the request
+        $file = $request->file('file');
+
+        // Use Laravel Excel to import the data using the StudentsImport class
+        Excel::import(new StudentsImport, $file);
+
+        // Return a response or redirect as needed
+        return response()->json(['message' => 'Students import completed successfully']);
     }
 }
