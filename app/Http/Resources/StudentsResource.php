@@ -15,13 +15,10 @@ class StudentsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => (string)$this->id,
-                'type' => 'Students',
+            'type' => 'Students',
                 'attributes' => [
                     'name' => $this->name,
                     'email' => $this->email, 
-                    'address' => $this->address, 
-                    'study course' => $this->study_course,
                 ]
         ];
     }

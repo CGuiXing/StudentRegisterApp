@@ -15,10 +15,12 @@ use App\Http\Controllers\StudentsController;
 |
 */
 
-Route::middleware('auth:api')->group(function(){
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-    Route::get('/students/{student}', [StudentsController::class, 'show']);
+Route::middleware('auth:api')->prefix('students')->group(function(){
+    Route::get('/', [StudentsController::class, 'index']);
+    Route::get('/name/{name}', [StudentsController::class, 'search_name']);
+    Route::get('/email/{email}', [StudentsController::class, 'search_email']);
 });
