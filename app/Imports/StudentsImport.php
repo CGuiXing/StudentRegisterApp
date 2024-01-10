@@ -4,44 +4,53 @@ namespace App\Imports;
 
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 
 class StudentsImport implements ToModel, WithHeadingRow
 {
-    private $processedEmails = [];
+    use RegistersEventListeners;
+    private $processedIds = [];
 
     public function model(array $row)
     {
-        // Retrieve all students with the given email
-        $existingStudents = Student::where('email', $row['email'])->get();
+        // Retrieve the student with the given id
+        $existingStudent = Student::find($row['id']);
 
-        // Loop through the existing students and update each one
-        foreach ($existingStudents as $existingStudent) {
+        // If the student exists, update the record
+        if ($existingStudent) {
             $existingStudent->update([
                 'name' => $row['name'],
                 'email' => $row['email'],
                 'address' => $row['address'],
                 'study_course' => $row['study_course'],
             ]);
-        }
-
-        // If no existing students are found, create a new student
-        if ($existingStudents->isEmpty()) {
+        } else {
+            // If no existing student is found, create a new student
             $newStudent = new Student([
+                'id' => $row['id'],
                 'name' => $row['name'],
                 'email' => $row['email'],
                 'address' => $row['address'],
                 'study_course' => $row['study_course'],
             ]);
+
             $newStudent->save();
 
-            $this->processedEmails[] = $row['email'];
+            $this->processedIds[] = $row['id'];
         }
     }
 
-    public function onCompleted()
+    public static function afterImport(AfterImport $event)
     {
         // Delete students not present in the import file
-        Student::whereNotIn('email', $this->processedEmails)->delete();
+        $import = $event->getConcernable();
+        $import->deleteNotProcessedStudents();
+    }
+
+    private function deleteNotProcessedStudents()
+    {
+        Student::whereNotIn('id', $this->processedIds)->delete();
     }
 }
