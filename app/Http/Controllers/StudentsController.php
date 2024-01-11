@@ -28,54 +28,6 @@ class StudentsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreStudentRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Student $student)
-    {
-        //return new StudentsResource($student);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateStudentRequest $request, Student $student)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Student $student)
-    {
-        //
-    }
-
-    /**
      * Search the specified resource from storage.
      */
     public function search_name($name)
@@ -89,21 +41,19 @@ class StudentsController extends Controller
         else{
             return StudentsResource::collection($student);
         }
-        
     }
 
     public function search_email($email)
     {
         $student = Student::where('email', 'like', '%'.$email.'%')->get();
 
-        // You may want to handle cases where no student is found
+        // Handle cases where no student is found
         if (!$student) {
             return response()->json(['message' => 'Student not found'], 404);
         }
         else{
             return StudentsResource::collection($student);
         }
-        
     }
 
     public function importStudents(Request $request)
