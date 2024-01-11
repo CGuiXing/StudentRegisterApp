@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 
@@ -37,20 +36,10 @@ class StudentsImport implements ToModel, WithHeadingRow
             ]);
 
             $newStudent->save();
-
-            $this->processedIds[] = $row['id'];
         }
-    }
 
-    public static function afterImport(AfterImport $event)
-    {
-        // Delete students not present in the import file
-        $import = $event->getConcernable();
-        $import->deleteNotProcessedStudents();
-    }
-
-    private function deleteNotProcessedStudents()
-    {
+        $this->processedIds[] = $row['id'];
+        
         Student::whereNotIn('id', $this->processedIds)->delete();
     }
 }
